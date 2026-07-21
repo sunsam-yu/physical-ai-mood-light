@@ -74,7 +74,16 @@ flowchart TD
 
 ## 키트 없이 시험하기
 
-[`web/09_digital_twin`](../../web/09_digital_twin)을 서버로 열고 각 슬라이더를 움직입니다.
+먼저 [`web/09_digital_twin`](../../web/09_digital_twin)의 슬라이더로 판단 함수만 독립 시험합니다. 경계값 시험을 통과하면 Part 8까지 누적한 자신의 웹 파일에 `policy.mjs`를 연결합니다.
+
+1. `decideAutomaticLight()`에 MANUAL 조건을 먼저 작성합니다.
+2. 거리 범위 밖의 OFF 조건을 추가하고 150cm와 151cm를 시험합니다.
+3. 표정 없음과 신뢰도 부족의 HOLD 조건을 추가합니다.
+4. 표정별 RGB, 가변저항 상한, 조도 보정을 차례로 추가합니다.
+5. `commandLine()`으로 Arduino 명령을 만들고 기존 전송 함수에 연결합니다.
+6. 실제 `light_state` 응답이 올 때만 기존 디지털 트윈을 갱신합니다.
+
+조건을 하나 추가할 때마다 바로 아래·경계·바로 위의 세 값을 시험합니다.
 
 | 바꿀 조건 | 확인할 결과 |
 |---|---|
@@ -190,6 +199,15 @@ flowchart TD
 - 7개 정책 시험표
 - 정책 변경 비교표
 - Part 9 마무리 질문 답변
+
+## 이번 단계 모범답안
+
+활동과 자기 점검을 끝낸 뒤 확인합니다.
+
+- [Part 9 판단 함수 모범답안](../../web/09_digital_twin/policy.mjs)
+- [Part 9 경계값 시험 화면](../../web/09_digital_twin)
+
+독립 시험 화면을 자신의 대시보드로 교체하지 말고 `decideAutomaticLight()`, `commandLine()`, 자동 명령 호출 위치만 누적 코드와 비교합니다.
 
 ## 다음 단계
 

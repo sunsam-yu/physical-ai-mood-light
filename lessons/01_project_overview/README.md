@@ -36,8 +36,11 @@
 
 ## 수업에서 지킬 원칙
 
-- 각 단계가 정상 작동한 뒤 다음 단계로 넘어갑니다.
-- 코드에서는 표시된 설정값과 지정된 함수만 수정합니다.
+- Part 2에서 만든 Arduino 파일과 Part 5에서 만든 웹 파일을 마지막까지 이어서 수정합니다.
+- 매 단계에서 필요한 함수나 화면 요소를 직접 타이핑하고, 곧바로 실행해 확인합니다.
+- 함수는 작성만 하지 않고 반드시 `setup()` 또는 `loop()`의 호출 흐름에 연결합니다.
+- 다음 단계로 넘어가기 전에 한 줄이나 한 값을 직접 바꾸어 결과를 비교합니다.
+- GitHub 모범답안은 활동을 마친 뒤 비교하며, 자신의 파일을 통째로 덮어쓰지 않습니다.
 - 얼굴 사진과 웹캠 영상은 저장하지 않습니다.
 - AI 결과는 감정 판정이 아니라 표정 특징에 따른 추정값으로 설명합니다.
 
@@ -50,9 +53,9 @@
 
 ## GitHub 자료
 
-- [1단계 학습자료](https://github.com/sunsam-yu/physical-ai-mood-light/tree/main/lessons/01_project_overview)
+- [Part 1 모범답안: 시스템 분해와 예상 함수 목록](https://github.com/sunsam-yu/physical-ai-mood-light/tree/main/lessons/01_project_overview)
 - [전체 프로젝트 저장소](https://github.com/sunsam-yu/physical-ai-mood-light)
 
 ## 다음 단계
 
-2단계에서는 키트의 핀을 확인하고 센서 네 종류와 네오픽셀이 모두 작동하는지 한 번에 점검합니다.
+2단계에서는 키트의 핀을 확인하고, Part 10까지 이어서 사용할 Arduino 파일의 선언·초기화 뼈대를 직접 만듭니다.

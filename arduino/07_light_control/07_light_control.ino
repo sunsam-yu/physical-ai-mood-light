@@ -1,31 +1,114 @@
 #include <Adafruit_NeoPixel.h>
 
-// ===== 학생이 확인하거나 바꿀 설정 =====
+// Part 7까지의 누적 모범답안: 센서 + JSON 전송 + 웹 조명 명령
+const int POT_PIN = A0;
+const int LIGHT_PIN = A5;
+const int TOUCH_PIN = 13;
+const int TRIG_PIN = 2;
+const int ECHO_PIN = 3;
 const int LED_PIN = 7;
 const int LED_COUNT = 8;
+
+const bool TOUCH_ACTIVE_HIGH = true;
 const int MAX_LED_BRIGHTNESS = 80;
+const unsigned long TOUCH_DEBOUNCE_MS = 50;
+const unsigned long DISTANCE_INTERVAL_MS = 100;
+const unsigned long SEND_INTERVAL_MS = 200;
+const unsigned long ECHO_TIMEOUT_US = 25000UL;
 
 Adafruit_NeoPixel pixels(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+
+int potValue = 0;
+int lightValue = 0;
+bool rawTouchDetected = false;
+bool lastRawTouchDetected = false;
+bool stableTouchDetected = false;
+float distanceCm = -1.0;
+
+int currentR = 0;
+int currentG = 0;
+int currentB = 0;
+int currentBrightness = 0;
+bool autoMode = false;
+
+unsigned long lastTouchChangeMs = 0;
+unsigned long lastDistanceMs = 0;
+unsigned long lastSendMs = 0;
 
 char commandBuffer[64];
 uint8_t commandLength = 0;
 bool commandOverflow = false;
 
-int currentR = 59;
-int currentG = 130;
-int currentB = 246;
-int currentBrightness = 40;
-bool autoMode = false;
-
 void setup() {
   Serial.begin(115200);
-  pixels.begin();
-  applyLight();
-  sendLightState();
+  setupPins();
+  setupNeoPixel();
+  initializeTouchState();
 }
 
 void loop() {
+  readPotentiometer();
+  readLightSensor();
+  readTouchSensor();
+  readDistanceSensor();
   readWebCommand();
+  sendSensorDataAtInterval();
+}
+
+void setupPins() {
+  pinMode(TOUCH_PIN, INPUT);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  digitalWrite(TRIG_PIN, LOW);
+}
+
+void setupNeoPixel() {
+  pixels.begin();
+  pixels.clear();
+  pixels.show();
+}
+
+void initializeTouchState() {
+  bool pinHigh = digitalRead(TOUCH_PIN) == HIGH;
+  rawTouchDetected = TOUCH_ACTIVE_HIGH ? pinHigh : !pinHigh;
+  lastRawTouchDetected = rawTouchDetected;
+  stableTouchDetected = rawTouchDetected;
+}
+
+void readPotentiometer() {
+  potValue = analogRead(POT_PIN);
+}
+
+void readLightSensor() {
+  lightValue = analogRead(LIGHT_PIN);
+}
+
+void readTouchSensor() {
+  bool pinHigh = digitalRead(TOUCH_PIN) == HIGH;
+  rawTouchDetected = TOUCH_ACTIVE_HIGH ? pinHigh : !pinHigh;
+
+  if (rawTouchDetected != lastRawTouchDetected) {
+    lastRawTouchDetected = rawTouchDetected;
+    lastTouchChangeMs = millis();
+  }
+
+  if (millis() - lastTouchChangeMs < TOUCH_DEBOUNCE_MS) return;
+  stableTouchDetected = rawTouchDetected;
+}
+
+void readDistanceSensor() {
+  unsigned long now = millis();
+  if (now - lastDistanceMs < DISTANCE_INTERVAL_MS) return;
+  lastDistanceMs = now;
+
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  unsigned long durationUs = pulseIn(ECHO_PIN, HIGH, ECHO_TIMEOUT_US);
+  distanceCm = durationUs == 0 ? -1.0 : durationUs * 0.0343 / 2.0;
 }
 
 void readWebCommand() {
@@ -55,8 +138,14 @@ void finishWebCommand() {
 }
 
 void handleWebCommand(char* command) {
+  if (command[0] == '\0') return;
+
   if (strcmp(command, "PING") == 0) {
     Serial.println(F("{\"type\":\"status\",\"message\":\"pong\"}"));
+    return;
+  }
+  if (strcmp(command, "GET") == 0) {
+    sendSensorData();
     return;
   }
   if (strcmp(command, "GET_LIGHT") == 0) {
@@ -91,7 +180,6 @@ void handleWebCommand(char* command) {
     return;
   }
 
-  // 모든 필드가 정상일 때만 상태를 한 번에 바꿉니다.
   currentR = (int)r;
   currentG = (int)g;
   currentB = (int)b;
@@ -123,6 +211,30 @@ void applyLight() {
   pixels.setBrightness(currentBrightness);
   pixels.fill(pixels.Color(currentR, currentG, currentB));
   pixels.show();
+}
+
+void sendSensorDataAtInterval() {
+  unsigned long now = millis();
+  if (now - lastSendMs < SEND_INTERVAL_MS) return;
+  lastSendMs = now;
+  sendSensorData();
+}
+
+void sendSensorData() {
+  Serial.print(F("{\"type\":\"sensor\",\"pot\":"));
+  Serial.print(potValue);
+  Serial.print(F(",\"light\":"));
+  Serial.print(lightValue);
+  Serial.print(F(",\"touch\":"));
+  Serial.print(stableTouchDetected ? F("true") : F("false"));
+  Serial.print(F(",\"distance\":"));
+  if (distanceCm < 0) Serial.print(F("null"));
+  else Serial.print(distanceCm, 1);
+  Serial.print(F(",\"brightness\":"));
+  Serial.print(currentBrightness);
+  Serial.print(F(",\"mode\":\""));
+  Serial.print(autoMode ? F("AUTO") : F("MANUAL"));
+  Serial.println(F("\"}"));
 }
 
 void sendLightState() {

@@ -2,6 +2,8 @@
 
 공업고 학생이 아두이노 센서, 웹 대시보드, 표정 분류 AI, 디지털 트윈을 단계적으로 결합하는 프로젝트입니다.
 
+학생은 Part마다 다른 완성 코드를 실행하지 않습니다. Part 2에서 만든 Arduino 파일과 Part 5에서 만든 웹 파일을 계속 수정하며, 함수와 화면 요소가 하나씩 늘어나는 과정을 직접 경험합니다. 각 Part의 GitHub 링크는 활동 뒤 자신의 코드와 비교하는 누적 모범답안·기능 참고 자료입니다.
+
 ## 최종 결과
 
 - 키트 센서값을 웹 대시보드에 실시간 표시
@@ -16,8 +18,8 @@
 | 단계 | 학생이 만드는 결과 | 저장 위치 |
 |---|---|---|
 | 01 | 프로젝트 이해와 완성 모습 | [`lessons/01_project_overview`](lessons/01_project_overview) |
-| 02 | 키트 조립 및 부품 점검 | [`arduino/02_component_test`](arduino/02_component_test) |
-| 03 | 센서별 기본 실습 | [`arduino/03_sensor_basics`](arduino/03_sensor_basics) |
+| 02 | 코드 뼈대와 부품 초기화 | [`arduino/02_component_test`](arduino/02_component_test) |
+| 03 | 센서 입력 함수 누적 | [`arduino/03_sensor_basics`](arduino/03_sensor_basics) |
 | 04 | 모듈형 아두이노 코드 | [`arduino/04_modular_controller`](arduino/04_modular_controller) |
 | 05 | 아두이노와 웹 연결 | [`arduino/05_web_serial`](arduino/05_web_serial), [`web/05_web_serial`](web/05_web_serial) |
 | 06 | 실시간 센서 대시보드 | [`web/06_dashboard`](web/06_dashboard) |
@@ -50,8 +52,8 @@
 | 단계 | 코드·수업자료 | 실제 키트 검증 |
 |---:|---|---|
 | 01 | 프로젝트 이해 자료 완성 | 해당 없음 |
-| 02 | 통합 부품 점검 코드와 자료 완성 | 통과 |
-| 03 | 센서별 예제 5개와 측정 매뉴얼 완성 | 통과 |
+| 02 | 선언·초기화 누적 모범답안과 자료 완성 | 통과 |
+| 03 | 센서 입력 누적 모범답안·독립 참고 예제 완성 | 통과 |
 | 04 | 모듈형 통합 코드와 매뉴얼 완성 | 통과 |
 | 05 | Web Serial 코드·매뉴얼 완성 | 통과 |
 | 06 | 실시간 대시보드·파서 테스트 완성 | 통과 |

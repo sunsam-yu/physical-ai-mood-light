@@ -74,12 +74,17 @@ void loop() {
 
 ## 1차시. 여러 입력을 동시에 읽기
 
-### 1. 코드 업로드
+### 1. Part 3 코드에서 계속 작성하기
 
-1. Arduino IDE에서 `arduino/04_modular_controller/04_modular_controller.ino`를 엽니다.
-2. 보드는 `Arduino Uno`, 포트는 현재 연결된 장치로 선택합니다.
-3. 코드를 업로드하고 시리얼 모니터를 엽니다.
-4. 속도를 `115200 baud`로 맞춥니다.
+Part 3에서 저장한 자신의 파일을 엽니다. `04_modular_controller.ino`는 아직 열지 않습니다.
+
+1. 터치 입력을 안정화하는 상태 변수와 `initializeTouchState()`를 추가합니다.
+2. `updateColorFromTouch()`를 작성하고 `loop()`에 호출합니다.
+3. `decideLightOutput()`을 작성해 가변저항값을 목표 밝기로 바꿉니다.
+4. `updateNeoPixel()`을 작성해 결정값을 실제 LED에 적용합니다.
+5. `printSensorValues()`를 `printSystemState()`로 확장합니다.
+
+각 함수는 작성 직후 호출하고, 그 기능만 바뀌는지 확인합니다.
 
 약 0.2초마다 다음과 같은 한 줄이 출력됩니다.
 
@@ -127,13 +132,14 @@ if (stableTouchDetected) touchPressedEvent = true;
 
 상태와 사건을 구분하면 손을 계속 대고 있어도 색이 빠르게 반복 변경되지 않습니다. `TOUCH_DEBOUNCE_MS`는 짧은 신호 흔들림을 제거하는 시간입니다.
 
-## 실행 순서
+## 누적 실행 순서
 
-1. [`04_modular_controller.ino`](../../arduino/04_modular_controller/04_modular_controller.ino)를 엽니다.
-2. `Adafruit NeoPixel` 라이브러리를 설치했는지 확인합니다.
-3. Arduino Uno와 포트를 선택해 업로드합니다.
-4. 시리얼 모니터를 `115200 baud`로 엽니다.
-5. 가변저항, 터치, 조도, 거리를 하나씩 바꾸며 전체 상태를 확인합니다.
+1. 이전 단계 코드가 먼저 정상 작동하는지 확인합니다.
+2. 이번 함수 하나를 직접 입력합니다.
+3. `setup()` 또는 `loop()`에 호출문을 추가합니다.
+4. 업로드하고 예상 결과와 실제 결과를 비교합니다.
+5. 문제가 있으면 방금 추가한 함수와 호출문만 확인합니다.
+6. 정상 작동하면 다음 함수를 추가합니다.
 
 ## 실습 A. 실행 주기 비교
 
@@ -227,8 +233,12 @@ if (stableTouchDetected) touchPressedEvent = true;
 
 ## GitHub 자료
 
-- [4단계 Arduino 완성 코드](https://github.com/sunsam-yu/physical-ai-mood-light/blob/main/arduino/04_modular_controller/04_modular_controller.ino)
-- [4단계 학습자료](https://github.com/sunsam-yu/physical-ai-mood-light/tree/main/lessons/04_modular_controller)
+활동과 자기 점검을 끝낸 뒤 확인합니다.
+
+- [Part 4까지의 누적 모범답안](https://github.com/sunsam-yu/physical-ai-mood-light/blob/main/arduino/04_modular_controller/04_modular_controller.ino)
+- [Part 4 비교·복구 안내](https://github.com/sunsam-yu/physical-ai-mood-light/tree/main/lessons/04_modular_controller)
+
+자신의 파일을 바꾸지 말고 새 함수, 전역 상태 변수, `setup()`과 `loop()`의 호출 순서만 비교합니다.
 
 ## 다음 단계
 
