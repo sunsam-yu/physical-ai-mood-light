@@ -71,7 +71,7 @@ void loop() {
 처음에는 코드 위쪽의 설정만 수정합니다.
 
 | 설정 | 의미 | 처음 권장값 |
-|---|---|---:|
+|---|---|---|
 | `TOUCH_ACTIVE_HIGH` | 터치할 때 HIGH가 되는 센서인지 여부 | `true` |
 | `MAX_LED_BRIGHTNESS` | USB 전원에서 사용할 최대 밝기 | `80` |
 | `TOUCH_DEBOUNCE_MS` | 터치 신호 흔들림 제거 시간 | `50` |
