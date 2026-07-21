@@ -19,7 +19,7 @@
 | 04 | 모듈형 아두이노 코드 | [`arduino/04_modular_controller`](arduino/04_modular_controller) |
 | 05 | 아두이노와 웹 연결 | [`arduino/05_web_serial`](arduino/05_web_serial), [`web/05_web_serial`](web/05_web_serial) |
 | 06 | 실시간 센서 대시보드 | [`web/06_dashboard`](web/06_dashboard) |
-| 07 | 웹에서 무드등 제어 | [`web/07_light_control`](web/07_light_control) |
+| 07 | 웹에서 무드등 제어 | [`arduino/07_light_control`](arduino/07_light_control), [`web/07_light_control`](web/07_light_control) |
 | 08 | 웹캠과 AI 표정 분류 | [`web/08_expression_ai`](web/08_expression_ai) |
 | 09 | AI 자동 조명과 디지털 트윈 | [`web/09_digital_twin`](web/09_digital_twin) |
 | 10 | 통합 테스트와 전시 준비 | [`final/10_exhibition`](final/10_exhibition) |
@@ -51,8 +51,15 @@
 | 02 | 통합 부품 점검 코드와 자료 완성 | 대기 |
 | 03 | 센서별 예제 5개와 측정 매뉴얼 완성 | 대기 |
 | 04 | 모듈형 통합 코드와 매뉴얼 완성 | 대기 |
-| 05~10 | 수업 골격 생성 | 개발 예정 |
+| 05 | Web Serial 코드·매뉴얼 완성 | 대기 |
+| 06 | 실시간 대시보드·파서 테스트 완성 | 대기 |
+| 07 | 웹 제어·Arduino 명령 수신·매뉴얼 완성 | 대기 |
+| 08 | AI 특징 분류·분류기 테스트·매뉴얼 완성 | 웹캠 검증 대기 |
+| 09 | 자동 조명 정책·디지털 트윈·경계값 테스트 완성 | 통합 검증 대기 |
+| 10 | 전시 절차·시험표·안내문 완성 | 최종 통합 대기 |
 
 키트가 없는 동안에는 코드 구조, 학생용 설명, 웹의 가상 센서 모드를 먼저 개발합니다. 조도 방향, 터치 출력, 거리 오차, 네오픽셀 밝기처럼 실측이 필요한 값은 키트 검증 후 확정합니다.
 
 학생용 설명은 [`lessons`](lessons)에서, 실행 코드는 `arduino`, `web`, `final` 폴더에서 확인합니다.
+
+키트를 연결할 때는 [`HARDWARE_TEST.md`](HARDWARE_TEST.md)의 순서와 기록표를 사용합니다.

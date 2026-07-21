@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f172a">
+    <title>5단계 · Arduino Web Serial</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">PHYSICAL AI · STEP 05</p>
+          <h1>Arduino–Web Serial 연결</h1>
+          <p class="subtitle">USB로 들어오는 JSON 한 줄을 센서값으로 바꿔 봅니다.</p>
+        </div>
+        <div class="status-panel" aria-live="polite">
+          <span id="statusDot" class="status-dot"></span>
+          <div>
+            <strong id="connectionStatus">연결 안 됨</strong>
+            <small id="lastUpdated">아직 받은 데이터가 없습니다.</small>
+          </div>
+        </div>
+      </header>
+
+      <section class="control-bar" aria-label="연결 제어">
+        <button id="connectButton" class="button button-primary" type="button">Arduino 연결</button>
+        <button id="disconnectButton" class="button" type="button" disabled>연결 해제</button>
+        <button id="pingButton" class="button" type="button" disabled>PING 보내기</button>
+        <span class="divider" aria-hidden="true"></span>
+        <button id="mockButton" class="button button-mock" type="button">가상 센서 시작</button>
+      </section>
+
+      <p id="browserNotice" class="notice" hidden></p>
+
+      <section class="sensor-grid" aria-label="센서값">
+        <article class="sensor-card">
+          <span>가변저항</span>
+          <strong id="potValue">---</strong>
+          <small>0–1023</small>
+        </article>
+        <article class="sensor-card">
+          <span>조도센서</span>
+          <strong id="lightValue">---</strong>
+          <small>원시값</small>
+        </article>
+        <article class="sensor-card">
+          <span>터치센서</span>
+          <strong id="touchValue">---</strong>
+          <small>감지 상태</small>
+        </article>
+        <article class="sensor-card">
+          <span>거리</span>
+          <strong id="distanceValue">---</strong>
+          <small>cm</small>
+        </article>
+        <article class="sensor-card">
+          <span>LED 밝기</span>
+          <strong id="brightnessValue">---</strong>
+          <small>0–80</small>
+        </article>
+        <article class="sensor-card">
+          <span>색 번호</span>
+          <strong id="colorValue">---</strong>
+          <small>0–3</small>
+        </article>
+      </section>
+
+      <section class="console-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">JSON LINES</p>
+            <h2>최근 수신 원문</h2>
+          </div>
+          <button id="clearLogButton" class="text-button" type="button">기록 지우기</button>
+        </div>
+        <pre id="serialLog" aria-live="polite">데이터를 기다리는 중...</pre>
+        <p id="message" class="message">Arduino가 없으면 가상 센서로 먼저 확인하세요.</p>
+      </section>
+
+      <footer>
+        Chrome·Edge의 HTTPS 또는 localhost에서 실행하세요. 연결 전 Arduino IDE의 시리얼 모니터를 닫아야 합니다.
+      </footer>
+    </main>
+  </body>
+</html>
+

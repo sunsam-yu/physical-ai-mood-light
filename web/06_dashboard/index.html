@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#08111f">
+    <title>실시간 센서 대시보드 | AI 무드등</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#sensor-grid">센서 카드로 바로 가기</a>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="eyebrow">PHYSICAL AI · STEP 06</span>
+        <h1>실시간 센서 대시보드</h1>
+      </div>
+
+      <div class="connection-actions" aria-label="연결 제어">
+        <div id="source-status" class="status-badge status-simulation" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="source-status-text">가상 센서 실행 중</span>
+        </div>
+        <button id="serial-button" class="button button-primary" type="button">Arduino 연결</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="dashboard-heading">
+        <div>
+          <p class="section-label">LIVE INPUT</p>
+          <h2 id="dashboard-heading">센서의 변화를 한눈에 확인하세요.</h2>
+          <p>현재값은 카드로, 최근 변화는 그래프로 표시합니다. Arduino가 없을 때는 아래 가상 센서 값을 움직여 보세요.</p>
+        </div>
+        <div class="clock-panel" aria-label="데이터 수신 상태">
+          <span>마지막 데이터</span>
+          <strong id="last-update">방금 전</strong>
+        </div>
+      </section>
+
+      <section id="sensor-grid" class="sensor-grid" aria-label="실시간 센서값">
+        <article class="sensor-card sensor-pot" data-card="pot">
+          <div class="card-heading">
+            <div>
+              <p class="sensor-code">A0 · ANALOG</p>
+              <h2>가변저항</h2>
+            </div>
+            <span class="sensor-icon" aria-hidden="true">◒</span>
+          </div>
+          <div class="reading-row">
+            <strong id="pot-value" class="reading">---</strong>
+            <span class="unit">/ 1023</span>
+          </div>
+          <p id="pot-meaning" class="meaning">값을 기다리는 중</p>
+          <div class="chart-frame" role="img" aria-labelledby="pot-chart-label">
+            <canvas id="pot-chart" data-sensor="pot" aria-hidden="true"></canvas>
+            <span id="pot-chart-label" class="sr-only">가변저항의 최근 변화 그래프. 아직 데이터가 없습니다.</span>
+          </div>
+        </article>
+
+        <article class="sensor-card sensor-light" data-card="light">
+          <div class="card-heading">
+            <div>
+              <p class="sensor-code">A5 · ANALOG</p>
+              <h2>조도센서</h2>
+            </div>
+            <span class="sensor-icon" aria-hidden="true">☼</span>
+          </div>
+          <div class="reading-row">
+            <strong id="light-value" class="reading">---</strong>
+            <span class="unit">/ 1023</span>
+          </div>
+          <p id="light-meaning" class="meaning">값을 기다리는 중</p>
+          <div class="chart-frame" role="img" aria-labelledby="light-chart-label">
+            <canvas id="light-chart" data-sensor="light" aria-hidden="true"></canvas>
+            <span id="light-chart-label" class="sr-only">조도센서의 최근 변화 그래프. 아직 데이터가 없습니다.</span>
+          </div>
+        </article>
+
+        <article class="sensor-card sensor-touch" data-card="touch">
+          <div class="card-heading">
+            <div>
+              <p class="sensor-code">D13 · DIGITAL</p>
+              <h2>터치센서</h2>
+            </div>
+            <span class="sensor-icon" aria-hidden="true">◎</span>
+          </div>
+          <div class="reading-row">
+            <strong id="touch-value" class="reading reading-word">---</strong>
+            <span class="unit">상태</span>
+          </div>
+          <p id="touch-meaning" class="meaning">값을 기다리는 중</p>
+          <div class="chart-frame" role="img" aria-labelledby="touch-chart-label">
+            <canvas id="touch-chart" data-sensor="touch" aria-hidden="true"></canvas>
+            <span id="touch-chart-label" class="sr-only">터치센서의 최근 상태 변화 그래프. 아직 데이터가 없습니다.</span>
+          </div>
+        </article>
+
+        <article class="sensor-card sensor-distance" data-card="distance">
+          <div class="card-heading">
+            <div>
+              <p class="sensor-code">D2 + D3 · PULSE</p>
+              <h2>거리센서</h2>
+            </div>
+            <span class="sensor-icon" aria-hidden="true">↔</span>
+          </div>
+          <div class="reading-row">
+            <strong id="distance-value" class="reading">---</strong>
+            <span class="unit">cm</span>
+          </div>
+          <p id="distance-meaning" class="meaning">값을 기다리는 중</p>
+          <div class="chart-frame" role="img" aria-labelledby="distance-chart-label">
+            <canvas id="distance-chart" data-sensor="distance" aria-hidden="true"></canvas>
+            <span id="distance-chart-label" class="sr-only">거리센서의 최근 변화 그래프. 아직 데이터가 없습니다.</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="control-grid" aria-label="대시보드 제어와 데이터 상태">
+        <article class="panel simulator-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-label">NO HARDWARE NEEDED</p>
+              <h2>가상 센서</h2>
+            </div>
+            <label class="switch-label">
+              <span>가상 모드</span>
+              <input id="simulation-toggle" type="checkbox" role="switch" checked>
+            </label>
+          </div>
+
+          <label class="auto-row">
+            <input id="auto-simulation" type="checkbox" checked>
+            <span>값을 자동으로 변화시키기</span>
+          </label>
+
+          <div id="simulation-controls" class="slider-grid">
+            <label>
+              <span>가변저항 <output id="sim-pot-output" for="sim-pot">512</output></span>
+              <input id="sim-pot" type="range" min="0" max="1023" value="512">
+            </label>
+            <label>
+              <span>조도 <output id="sim-light-output" for="sim-light">680</output></span>
+              <input id="sim-light" type="range" min="0" max="1023" value="680">
+            </label>
+            <label>
+              <span>거리 <output id="sim-distance-output" for="sim-distance">80 cm</output></span>
+              <input id="sim-distance" type="range" min="2" max="250" value="80">
+            </label>
+            <label class="touch-control">
+              <span>터치 상태</span>
+              <input id="sim-touch" type="checkbox" role="switch">
+              <span class="touch-state" id="sim-touch-output">감지 안 됨</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="panel quality-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-label">DATA QUALITY</p>
+              <h2>수신 상태</h2>
+            </div>
+            <button id="clear-button" class="button button-ghost" type="button">기록 지우기</button>
+          </div>
+
+          <dl class="quality-list">
+            <div>
+              <dt>정상 데이터</dt>
+              <dd id="packet-count">0</dd>
+            </div>
+            <div>
+              <dt>해석 오류</dt>
+              <dd id="error-count">0</dd>
+            </div>
+            <div class="quality-message">
+              <dt>최근 안내</dt>
+              <dd id="last-message">가상 센서가 데이터를 만들고 있습니다.</dd>
+            </div>
+          </dl>
+
+          <p id="serial-support-note" class="support-note">Chrome 또는 Edge에서 Arduino를 연결할 수 있습니다.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <span>내 표정에 반응하는 AI 무드등과 웹 디지털 트윈</span>
+      <span>센서 원본값은 이 브라우저 안에서만 표시됩니다.</span>
+    </footer>
+
+    <script src="data-parser.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

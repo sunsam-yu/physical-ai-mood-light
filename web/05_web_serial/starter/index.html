@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>5단계 시작 코드 · Web Serial</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">PHYSICAL AI · STEP 05 STARTER</p>
+          <h1>시리얼 원문 받기</h1>
+          <p class="subtitle">먼저 Arduino가 보낸 한 줄을 그대로 확인합니다.</p>
+        </div>
+      </header>
+
+      <section class="control-bar">
+        <button id="connectButton" class="button button-primary" type="button">Arduino 연결</button>
+        <button id="disconnectButton" class="button" type="button" disabled>연결 해제</button>
+      </section>
+
+      <p id="message" class="message">Chrome·Edge의 HTTPS 또는 localhost에서 실행하세요.</p>
+
+      <section class="console-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">RAW TEXT</p>
+            <h2>Arduino가 보낸 내용</h2>
+          </div>
+        </div>
+        <pre id="serialLog">데이터를 기다리는 중...</pre>
+      </section>
+    </main>
+  </body>
+</html>
+

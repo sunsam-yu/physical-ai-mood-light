@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111827" />
+    <title>7단계 | 웹 무드등 제어</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">PHYSICAL AI · STEP 07</p>
+        <h1>웹 무드등 제어</h1>
+        <p class="subtitle">RGB·밝기·모드를 명령으로 보내고 8구 네오픽셀의 모습을 화면에서 확인합니다.</p>
+      </div>
+      <div id="connectionBadge" class="status-badge status-offline" role="status" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="connectionText">연결 안 됨</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel connection-panel" aria-labelledby="connectionTitle">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">1. 연결</p>
+            <h2 id="connectionTitle">전송 방법 선택</h2>
+          </div>
+          <span id="transportHint" class="helper-chip">키트 없이 연습</span>
+        </div>
+
+        <div class="connection-row">
+          <label class="field transport-field">
+            <span>전송 방법</span>
+            <select id="transportSelect">
+              <option value="mock">가상 연결(Mock)</option>
+              <option value="serial">Arduino USB(Web Serial)</option>
+            </select>
+          </label>
+          <button id="connectButton" class="button button-primary" type="button">연결</button>
+          <button id="disconnectButton" class="button button-secondary" type="button" disabled>연결 해제</button>
+        </div>
+        <p id="connectionHelp" class="help-text">
+          가상 연결은 Arduino 없이 전송 과정을 시험합니다.
+        </p>
+      </section>
+
+      <section class="panel controls-panel" aria-labelledby="controlsTitle">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">2. 명령 만들기</p>
+            <h2 id="controlsTitle">조명 설정</h2>
+          </div>
+          <span id="modeBadge" class="mode-badge mode-manual">MANUAL</span>
+        </div>
+
+        <fieldset class="mode-selector">
+          <legend>작동 모드</legend>
+          <label>
+            <input type="radio" name="mode" value="MANUAL" checked />
+            <span><strong>MANUAL</strong><small>웹 설정 사용</small></span>
+          </label>
+          <label>
+            <input type="radio" name="mode" value="AUTO" />
+            <span><strong>AUTO</strong><small>자동 제어에 넘김</small></span>
+          </label>
+        </fieldset>
+
+        <div id="manualControls" class="manual-controls">
+          <div class="color-control">
+            <label class="field color-picker-field">
+              <span>색상 선택</span>
+              <input id="colorPicker" type="color" value="#3b82f6" />
+            </label>
+
+            <div class="rgb-grid" aria-label="RGB 직접 입력">
+              <label class="field rgb-red">
+                <span>R</span>
+                <input id="redInput" type="number" min="0" max="255" step="1" value="59" inputmode="numeric" />
+              </label>
+              <label class="field rgb-green">
+                <span>G</span>
+                <input id="greenInput" type="number" min="0" max="255" step="1" value="130" inputmode="numeric" />
+              </label>
+              <label class="field rgb-blue">
+                <span>B</span>
+                <input id="blueInput" type="number" min="0" max="255" step="1" value="246" inputmode="numeric" />
+              </label>
+            </div>
+          </div>
+
+          <div class="preset-row" aria-label="추천 색상">
+            <button type="button" class="preset" data-color="#3b82f6" style="--preset-color: #3b82f6">파랑</button>
+            <button type="button" class="preset" data-color="#f97316" style="--preset-color: #f97316">주황</button>
+            <button type="button" class="preset" data-color="#a855f7" style="--preset-color: #a855f7">보라</button>
+            <button type="button" class="preset" data-color="#10b981" style="--preset-color: #10b981">초록</button>
+            <button type="button" class="preset" data-color="#ffffff" style="--preset-color: #ffffff">흰색</button>
+          </div>
+
+          <div class="brightness-control">
+            <div class="brightness-heading">
+              <label for="brightnessSlider">밝기</label>
+              <span>안전 범위 0~80</span>
+            </div>
+            <div class="brightness-row">
+              <input id="brightnessSlider" type="range" min="0" max="80" step="1" value="40" />
+              <input id="brightnessInput" aria-label="밝기 숫자 입력" type="number" min="0" max="80" step="1" value="40" inputmode="numeric" />
+            </div>
+          </div>
+        </div>
+
+        <div id="autoNotice" class="auto-notice" hidden>
+          AUTO 모드에서는 색과 밝기를 자동 제어 기능에 맡깁니다. 현재 RGB·밝기는 전환 직전 상태로 함께 전송됩니다.
+        </div>
+
+        <div id="feedback" class="feedback feedback-neutral" role="status" aria-live="polite">
+          먼저 전송 방법을 연결하세요.
+        </div>
+
+        <button id="sendButton" class="button button-send" type="button" disabled>
+          조명 명령 보내기
+        </button>
+      </section>
+
+      <section class="panel twin-panel" aria-labelledby="twinTitle">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">3. 결과 확인</p>
+            <h2 id="twinTitle">8구 2D 디지털 트윈</h2>
+          </div>
+          <span class="helper-chip">명령 상태</span>
+        </div>
+
+        <div class="twin-stage">
+          <div id="pixelRing" class="pixel-ring" role="img" aria-label="파란색 밝기 40의 네오픽셀 8구 미리보기">
+            <div class="ring-center">
+              <span id="twinMode">MANUAL</span>
+              <strong id="twinBrightness">40</strong>
+              <small>brightness</small>
+            </div>
+          </div>
+        </div>
+
+        <dl class="state-grid">
+          <div><dt>RGB</dt><dd id="rgbState">59, 130, 246</dd></div>
+          <div><dt>밝기</dt><dd id="brightnessState">40 / 80</dd></div>
+          <div><dt>모드</dt><dd id="modeState">MANUAL</dd></div>
+          <div><dt>전송</dt><dd id="sendState">대기</dd></div>
+        </dl>
+
+        <div class="log-box">
+          <div class="log-heading">
+            <h3>최근 전송 데이터</h3>
+            <button id="clearLogButton" type="button" class="text-button">기록 지우기</button>
+          </div>
+          <pre id="commandLog" aria-live="polite">아직 전송한 명령이 없습니다.</pre>
+        </div>
+        <p class="twin-note">이 화면은 마지막으로 보낸 명령을 표현합니다. Arduino가 실제로 적용한 상태를 되돌려받는 기능은 9단계에서 확장합니다.</p>
+      </section>
+    </main>
+  </body>
+</html>
