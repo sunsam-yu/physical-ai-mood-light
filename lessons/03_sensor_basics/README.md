@@ -38,18 +38,32 @@
 
 키트의 실제 커넥터 배열과 결선 사진은 실물 확인 후 추가합니다. 전원을 연결하기 전에 `5V·GND·신호선`의 방향을 반드시 확인합니다.
 
-## 공통 실행 순서
+## 하나의 코드에 입력 함수를 쌓는 순서
 
-1. 아래 예제 중 하나의 `.ino` 파일을 Arduino IDE로 엽니다.
-2. 보드를 `Arduino Uno`, 포트를 연결된 포트로 선택합니다.
-3. 코드를 업로드합니다.
-4. 시리얼 모니터를 열어 `115200 baud`로 설정합니다.
-5. 센서 주변 조건을 바꾸면서 값을 표에 기록합니다.
-6. 한 예제의 확인이 끝난 뒤 다음 예제로 넘어갑니다.
+Part 2에서 저장한 `physical_ai_mood_light.ino`를 엽니다. 아래 독립 예제는 정답을 확인할 때만 사용하고, 실습은 자신의 파일에 함수를 하나씩 직접 타이핑하며 진행합니다.
+
+1. 전역 변수 `potValue`를 선언하고 `readPotentiometer()`를 작성합니다.
+2. `loop()`에 `readPotentiometer();`를 추가한 뒤 값이 변하는지 확인합니다.
+3. 같은 방법으로 `readLightSensor()`를 작성하고 호출문을 한 줄 더 추가합니다.
+4. `readTouchSensor()`를 추가해 HIGH와 LOW를 확인합니다.
+5. `readDistanceSensor()`를 추가해 초음파 왕복 시간을 거리로 바꿉니다.
+6. 마지막으로 센서값을 한 줄에 출력하는 `printSensorValues()`를 작성합니다.
+
+함수를 여러 개 먼저 복사한 뒤 한꺼번에 실행하지 않습니다. 하나를 작성하고 호출하고 시험한 뒤 다음 함수로 넘어갑니다.
+
+```cpp
+void loop() {
+  readPotentiometer();
+  readLightSensor();
+  readTouchSensor();
+  readDistanceSensor();
+  printSensorValues();
+}
+```
 
 ## 실습 1. 가변저항
 
-[가변저항 코드](../../arduino/03_sensor_basics/01_potentiometer/01_potentiometer.ino)를 실행하고 손잡이를 끝에서 끝까지 천천히 돌립니다.
+자신의 코드에 `readPotentiometer()`를 작성하고 손잡이를 끝에서 끝까지 천천히 돌립니다. [가변저항 참고 코드](../../arduino/03_sensor_basics/01_potentiometer/01_potentiometer.ino)는 실행과 기록을 마친 뒤 비교합니다.
 
 - `analogRead()`는 A0의 전압을 `0~1023` 정수로 바꿉니다.
 - `map()`은 이 값을 보기 쉬운 `0~100%`로 바꿉니다.
@@ -63,7 +77,7 @@
 
 ## 실습 2. 조도센서
 
-[조도센서 코드](../../arduino/03_sensor_basics/02_light_sensor/02_light_sensor.ino)를 실행하고 센서를 가리거나 빛을 비춥니다.
+같은 파일에 `readLightSensor()`와 호출문을 추가합니다. 두 입력값이 함께 갱신되는 것을 확인한 뒤 센서를 가리거나 빛을 비춥니다. [조도센서 참고 코드](../../arduino/03_sensor_basics/02_light_sensor/02_light_sensor.ino)는 마지막에 비교합니다.
 
 조도센서는 키트의 회로 구성에 따라 밝을 때 값이 커질 수도, 작아질 수도 있습니다. 숫자의 크기를 외우지 말고 실제 변화 방향을 확인합니다.
 
@@ -77,7 +91,7 @@
 
 ## 실습 3. 터치센서
 
-[터치센서 코드](../../arduino/03_sensor_basics/03_touch_sensor/03_touch_sensor.ino)를 실행합니다.
+같은 파일에 `readTouchSensor()`와 호출문을 추가합니다. [터치센서 참고 코드](../../arduino/03_sensor_basics/03_touch_sensor/03_touch_sensor.ino)는 마지막에 비교합니다.
 
 - 디지털 입력은 연속된 숫자 대신 `HIGH` 또는 `LOW` 두 상태를 읽습니다.
 - 예제에서는 `HIGH`를 `감지`, `LOW`를 `없음`으로 표시합니다.
@@ -92,7 +106,7 @@
 
 ## 실습 4. 초음파센서
 
-[초음파센서 코드](../../arduino/03_sensor_basics/04_ultrasonic_sensor/04_ultrasonic_sensor.ino)를 실행하고 평평한 물체를 센서 정면에 둡니다.
+같은 파일에 `readDistanceSensor()`와 호출문을 추가하고 평평한 물체를 센서 정면에 둡니다. [초음파센서 참고 코드](../../arduino/03_sensor_basics/04_ultrasonic_sensor/04_ultrasonic_sensor.ino)는 마지막에 비교합니다.
 
 아두이노는 초음파가 물체에 반사되어 돌아오는 시간을 마이크로초 단위로 측정합니다.
 
@@ -110,7 +124,7 @@
 
 ## 실습 5. 네오픽셀
 
-[네오픽셀 코드](../../arduino/03_sensor_basics/05_neopixel/05_neopixel.ino)를 실행합니다. 1초마다 빨강, 초록, 파랑, 주황, 흰색 순서로 바뀌는지 확인합니다.
+Part 2에서 만든 `setupNeoPixel()` 아래에 시험용 출력 함수를 잠시 작성합니다. 색을 확인한 뒤 함수는 남겨 두되 `loop()`의 시험 호출은 제거합니다. [네오픽셀 참고 코드](../../arduino/03_sensor_basics/05_neopixel/05_neopixel.ino)는 마지막에 비교합니다.
 
 - RGB는 빨강, 초록, 파랑의 밝기를 각각 `0~255`로 정합니다.
 - `(255, 0, 0)`은 빨강, `(0, 0, 255)`는 파랑입니다.
@@ -151,8 +165,13 @@
 
 ## GitHub 자료
 
-- [3단계 Arduino 예제 전체](https://github.com/sunsam-yu/physical-ai-mood-light/tree/main/arduino/03_sensor_basics)
-- [3단계 학습자료](https://github.com/sunsam-yu/physical-ai-mood-light/tree/main/lessons/03_sensor_basics)
+활동과 자기 점검을 끝낸 뒤 확인합니다.
+
+- [Part 3까지의 누적 모범답안](../../arduino/03_sensor_basics/03_sensor_basics.ino)
+- [센서별 독립 참고 코드](https://github.com/sunsam-yu/physical-ai-mood-light/tree/main/arduino/03_sensor_basics)
+- [Part 3 비교·복구 안내](https://github.com/sunsam-yu/physical-ai-mood-light/tree/main/lessons/03_sensor_basics)
+
+참고 파일을 번갈아 업로드하는 것이 아니라, 필요한 함수의 선언·저장 변수·호출 위치를 자신의 누적 코드와 비교합니다.
 
 ## 키트로 확인한 뒤 채울 항목
 
@@ -164,4 +183,4 @@
 
 ## 다음 단계
 
-4단계에서는 다섯 예제의 기능을 하나의 프로그램으로 합칩니다. 센서 읽기와 LED 출력을 각각 함수로 분리해, 기능을 추가하거나 오류를 찾기 쉬운 구조로 만듭니다.
+4단계에서는 이미 누적한 센서 입력 함수에 상태 결정과 네오픽셀 출력 함수를 붙입니다. 터치 안정화와 `millis()` 주기 처리도 같은 파일에 추가합니다.
