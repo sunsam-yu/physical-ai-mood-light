@@ -8,6 +8,6 @@
 <label>표정<select id="expression"><option value="smile">미소</option><option value="neutral">중립</option><option value="surprised">놀란 표정</option><option value="frown">찡그린 표정</option><option value="">확인 중</option></select></label>
 <label>신뢰도 <output id="confidenceOut"></output><input id="confidence" type="range" min="0" max="1" step="0.01" value="0.90"></label></div>
 <p class="note">현재는 가상 입력입니다. 8단계의 안정 분류 결과는 <code>window.updateExpressionPrediction(label, confidence)</code>로 연결할 수 있습니다.</p></section>
-<section><h2>2. 판단 결과</h2><div id="decision" class="decision"></div><pre id="command"></pre><label>조도센서 방향<select id="lightDirection"><option value="unknown">실측 전: 보정 안 함</option><option value="higher_is_brighter">밝을수록 값이 큼</option><option value="lower_is_brighter">밝을수록 값이 작음</option></select></label></section>
+<section><h2>2. 판단 결과</h2><div id="decision" class="decision"></div><pre id="command"></pre><label>조도센서 방향<select id="lightDirection"><option value="lower_is_brighter" selected>밝을수록 값이 작음 · 실측 확정</option><option value="higher_is_brighter">밝을수록 값이 큼</option><option value="unknown">조도 보정 안 함</option></select></label></section>
 <section><h2>3. 디지털 트윈</h2><div id="ring" class="ring" role="img"></div><dl><div><dt>RGB</dt><dd id="rgb">-</dd></div><div><dt>밝기</dt><dd id="brightness">-</dd></div><div><dt>상태</dt><dd id="action">-</dd></div></dl></section>
 </main></body></html>

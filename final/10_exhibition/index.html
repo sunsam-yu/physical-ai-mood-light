@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>10단계 | Physical AI 무드등 최종 통합</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">PHYSICAL AI · FINAL 10</p>
+      <h1>표정 반응형 AI 무드등</h1>
+      <p class="subtitle">실제 센서, 표정 특징 AI, 자동 판단, 네오픽셀과 디지털 트윈을 한 화면에서 연결합니다.</p>
+    </div>
+    <div class="status-stack" aria-label="시스템 상태">
+      <span id="serialStatus" class="status" data-state="idle">Arduino 연결 안 됨</span>
+      <span id="modelStatus" class="status" data-state="idle">AI 모델 대기</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="notice">
+      <strong>이 작품은 실제 감정을 판정하지 않습니다.</strong>
+      웹캠 영상은 브라우저 안에서만 처리하며 저장하거나 서버로 전송하지 않습니다. 얼굴 모양의 특징값을 네 범주로 분류합니다.
+    </section>
+
+    <section class="panel start-panel" aria-labelledby="startTitle">
+      <div>
+        <p class="step-label">1. 장치 준비</p>
+        <h2 id="startTitle">Arduino와 웹캠 연결</h2>
+      </div>
+      <div class="button-row">
+        <button id="connectButton" class="primary">Arduino 연결</button>
+        <button id="disconnectButton" disabled>연결 해제</button>
+        <button id="pingButton" disabled>PING</button>
+        <button id="loadModelButton" class="primary">AI 모델 준비</button>
+        <button id="cameraButton" disabled>웹캠 시작</button>
+      </div>
+      <p id="systemMessage" class="message" role="status" aria-live="polite">Arduino 연결과 AI 모델 준비를 차례로 실행하세요.</p>
+    </section>
+
+    <div class="main-grid">
+      <section class="panel sensor-panel" aria-labelledby="sensorTitle">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">2. 물리 입력</p>
+            <h2 id="sensorTitle">실시간 센서</h2>
+          </div>
+          <span id="packetStatus" class="chip">데이터 대기</span>
+        </div>
+        <div class="sensor-grid">
+          <article class="sensor-card" data-sensor="pot">
+            <span>가변저항</span><strong id="potValue">---</strong><small>0~1023 · 최대 밝기</small>
+            <canvas id="potChart" aria-label="가변저항 최근 데이터"></canvas>
+          </article>
+          <article class="sensor-card" data-sensor="light">
+            <span>조도센서</span><strong id="lightValue">---</strong><small>값이 클수록 어두움</small>
+            <canvas id="lightChart" aria-label="조도센서 최근 데이터"></canvas>
+          </article>
+          <article class="sensor-card" data-sensor="touch">
+            <span>터치센서</span><strong id="touchValue">---</strong><small>누를 때 AUTO/MANUAL 전환</small>
+            <canvas id="touchChart" aria-label="터치센서 최근 데이터"></canvas>
+          </article>
+          <article class="sensor-card" data-sensor="distance">
+            <span>초음파센서</span><strong id="distanceValue">---</strong><small>150cm 이내 사람 감지</small>
+            <canvas id="distanceChart" aria-label="거리센서 최근 데이터"></canvas>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel camera-panel" aria-labelledby="cameraTitle">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">3. AI 입력</p>
+            <h2 id="cameraTitle">웹캠과 표정 특징</h2>
+          </div>
+          <span id="faceStatus" class="chip">얼굴 대기</span>
+        </div>
+        <div class="video-frame">
+          <video id="webcam" autoplay playsinline muted></video>
+          <div id="cameraPlaceholder" class="placeholder">AI 모델을 준비하고 웹캠을 시작하세요.</div>
+        </div>
+        <div id="featureBars" class="feature-bars" aria-label="현재 얼굴 특징값"></div>
+      </section>
+
+      <section class="panel ai-panel" aria-labelledby="aiTitle">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">4. AI 학습</p>
+            <h2 id="aiTitle">내 표정 샘플</h2>
+          </div>
+          <button id="classifyButton" disabled>분류 시작</button>
+        </div>
+        <p class="help">웹캠을 켠 뒤 각 표정을 3초씩 학습하세요. 빠른 기능 시험은 예시 데이터로 시작할 수 있습니다.</p>
+        <div id="trainingGrid" class="training-grid"></div>
+        <div class="button-row compact">
+          <button id="demoSamplesButton">예시 데이터 사용</button>
+          <button id="clearSamplesButton" class="danger" disabled>학습 지우기</button>
+        </div>
+        <div class="prediction" aria-live="polite">
+          <span id="predictionIcon" aria-hidden="true">?</span>
+          <div><small>안정된 분류 결과</small><strong id="predictionLabel">학습 전</strong></div>
+          <b id="confidenceValue">0%</b>
+        </div>
+        <dl class="mini-metrics">
+          <div><dt>현재 판정</dt><dd id="rawPrediction">-</dd></div>
+          <div><dt>학습 샘플</dt><dd id="sampleCount">0개</dd></div>
+        </dl>
+      </section>
+
+      <section class="panel control-panel" aria-labelledby="controlTitle">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">5. 제어</p>
+            <h2 id="controlTitle">자동 판단과 수동 조명</h2>
+          </div>
+          <span id="modeBadge" class="mode-badge">MANUAL</span>
+        </div>
+        <fieldset class="mode-selector">
+          <legend>제어 모드</legend>
+          <label><input type="radio" name="mode" value="MANUAL" checked><span>MANUAL<small>웹에서 직접 제어</small></span></label>
+          <label><input type="radio" name="mode" value="AUTO"><span>AUTO<small>센서와 AI로 제어</small></span></label>
+        </fieldset>
+        <div id="manualControls" class="manual-controls">
+          <label>색상 <input id="manualColor" type="color" value="#3b82f6"></label>
+          <label>밝기 <span><output id="manualBrightnessOut">40</output> / 80</span><input id="manualBrightness" type="range" min="0" max="80" value="40"></label>
+          <button id="sendManualButton" class="primary" disabled>수동 조명 적용</button>
+        </div>
+        <div id="autoControls" class="auto-controls" hidden>
+          <dl class="decision-list">
+            <div><dt>판단</dt><dd id="decisionReason">센서와 표정 결과 대기</dd></div>
+            <div><dt>명령</dt><dd><code id="decisionCommand">이전 상태 유지</code></dd></div>
+            <div><dt>기준</dt><dd>거리 150cm · 신뢰도 70% · 밝기 상한 80</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="panel twin-panel" aria-labelledby="twinTitle">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">6. 실제 출력 확인</p>
+            <h2 id="twinTitle">네오픽셀 디지털 트윈</h2>
+          </div>
+          <span id="ackStatus" class="chip">Arduino 응답 대기</span>
+        </div>
+        <div class="twin-stage">
+          <div id="pixelRing" class="pixel-ring" role="img" aria-label="네오픽셀 실제 상태">
+            <div class="ring-center"><span id="twinMode">MANUAL</span><strong id="twinBrightness">0</strong><small>brightness</small></div>
+          </div>
+        </div>
+        <dl class="state-grid">
+          <div><dt>실제 RGB</dt><dd id="actualRgb">0, 0, 0</dd></div>
+          <div><dt>실제 밝기</dt><dd id="actualBrightness">0 / 80</dd></div>
+          <div><dt>Arduino 모드</dt><dd id="actualMode">MANUAL</dd></div>
+          <div><dt>최근 응답</dt><dd id="lastAck">없음</dd></div>
+        </dl>
+      </section>
+    </div>
+
+    <section class="panel log-panel" aria-labelledby="logTitle">
+      <div class="section-heading"><div><p class="step-label">진단</p><h2 id="logTitle">최근 동작 기록</h2></div><button id="clearLogButton">기록 지우기</button></div>
+      <ol id="eventLog" class="event-log"><li>최종 통합 페이지를 시작했습니다.</li></ol>
+    </section>
+  </main>
+
+  <footer>센서 → 브라우저 AI → 판단 규칙 → Arduino → 실제 네오픽셀 응답 순서로 작동합니다.</footer>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>

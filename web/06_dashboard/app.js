@@ -91,7 +91,12 @@
       if (value < 682) return "중간 범위";
       return "높은 범위";
     }
-    if (sensor === "light") return "밝고 어두운 방향은 키트 실측 후 확정";
+    if (sensor === "light") {
+      if (value <= 100) return "매우 밝음";
+      if (value <= 450) return "밝은 편";
+      if (value <= 700) return "어두운 편";
+      return "매우 어두움";
+    }
     if (sensor === "touch") return value ? "손가락 접촉 감지" : "접촉 감지 안 됨";
     if (value < 30) return "매우 가까움";
     if (value < 100) return "가까운 범위";
