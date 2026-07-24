@@ -12,23 +12,32 @@
 
 ## 실행
 
-먼저 Arduino에 다음 코드를 업로드합니다.
+이 폴더는 저장소의 다른 폴더 없이 단독으로 실행할 수 있습니다.
+
+먼저 Arduino에 이 폴더 안의 다음 코드를 업로드합니다.
 
 ```text
 arduino/10_final_integration/10_final_integration.ino
 ```
 
-프로젝트 루트에서 서버를 실행합니다.
+압축을 푼 이 폴더에서 명령 프롬프트를 열고 서버를 실행합니다.
 
 ```bash
-python3 -m http.server 8000
+py -m http.server 8000
 ```
 
-Chrome에서 다음 주소를 엽니다.
+`py`가 작동하지 않으면 Windows에서는 `python -m http.server 8000`, macOS에서는
+`python3 -m http.server 8000`을 사용합니다.
+
+Chrome 또는 Edge에서 다음 주소를 엽니다.
 
 ```text
-http://localhost:8000/final/10_exhibition/
+http://localhost:8000/
 ```
+
+`index.html`을 더블클릭해서 열면 모듈과 Web Serial이 정상 작동하지 않습니다.
+Arduino IDE의 시리얼 모니터를 닫은 뒤 `Arduino 연결`을 누르세요.
+AI 모델과 웹캠 기능은 MediaPipe 파일을 내려받으므로 인터넷 연결이 필요합니다.
 
 ## 시작 순서
 

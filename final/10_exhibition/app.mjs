@@ -5,8 +5,8 @@ import {
   LABELS,
   PredictionStabilizer,
   blendshapesToFeatures
-} from "../../web/08_expression_ai/classifier.mjs";
-import { commandLine, decideAutomaticLight } from "../../web/09_digital_twin/policy.mjs";
+} from "./classifier.mjs";
+import { commandLine, decideAutomaticLight } from "./policy.mjs";
 import {
   commandSignature,
   nextModeFromTouch,
